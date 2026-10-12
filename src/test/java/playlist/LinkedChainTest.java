@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
  * Tests for LinkedChain, following the Spec Section 7 chain table with
  * fixture X = [a, b, c].
  *
- * @author Person A
+ * @author Kaustubh Pasumarthi
  * @version October 2026
  */
 public class LinkedChainTest
