@@ -1,3 +1,5 @@
+package playlist;
+
 /**
  * A generic chain of linked nodes. Use it as the storage inside your
  * own classes, and extend or modify it as your project needs.
@@ -10,18 +12,27 @@
  * with add() come back from toArray() in reverse order of insertion.
  * addToEnd() preserves insertion order.
  *
+ * Contract (Spec Section 3): no bound on T; entries are never null;
+ * duplicates are allowed; search uses equals() and acts on the first
+ * match. add, addToEnd and addAt throw IllegalArgumentException on null.
+ * remove(T), contains, count and indexOf treat null as "not found".
+ *
  * Time complexity, where n is the number of entries:
  *   add              O(1)
  *   addToEnd         O(n)
+ *   addAt            O(n)
  *   remove()         O(1)
  *   remove(T)        O(n)
+ *   removeAt         O(n)
  *   clear            O(1)
  *   get              O(n)
+ *   indexOf          O(n)
  *   contains         O(n)
  *   count            O(n)
  *   size             O(1)
  *   isEmpty          O(1)
  *   toArray          O(n)
+ *   toString         O(n)
  *
  * @author CS 2114 Staff
  * @version September 2026
@@ -43,7 +54,7 @@ public class LinkedChain<T>
     }
 
     /**
-     * Adds a new entry to the front of this chain.
+     * Adds a new entry to the front of this chain. O(1).
      *
      * @param newEntry the object to be added; must not be null
      * @return true
@@ -51,14 +62,12 @@ public class LinkedChain<T>
      */
     public boolean add(T newEntry)
     {
-        requireNonNull(newEntry);
-        firstNode = new Node<T>(newEntry, firstNode);
-        numberOfEntries++;
-        return true;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Adds a new entry to the end of this chain.
+     * Adds a new entry to the end of this chain. O(n): walks to the
+     * last node.
      *
      * @param newEntry the object to be added; must not be null
      * @return true
@@ -66,87 +75,74 @@ public class LinkedChain<T>
      */
     public boolean addToEnd(T newEntry)
     {
-        requireNonNull(newEntry);
-        Node<T> newNode = new Node<T>(newEntry);
-        if (firstNode == null)
-        {
-            firstNode = newNode;
-        }
-        else
-        {
-            Node<T> current = firstNode;
-            while (current.next != null)
-            {
-                current = current.next;
-            }
-            current.next = newNode;
-        }
-        numberOfEntries++;
-        return true;
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * Inserts a new entry so that it lands at the given position.
+     * Entries at or after that position shift back by one. O(n): walks
+     * to the node before index.
+     *
+     * @param index the zero-based position, 0 to size() inclusive
+     * @param newEntry the object to be added; must not be null
+     * @throws IndexOutOfBoundsException if index is negative or
+     *         greater than size()
+     * @throws IllegalArgumentException if newEntry is null
+     */
+    public void addAt(int index, T newEntry)
+    {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
      * Removes and returns the first entry in this chain, if possible.
+     * O(1).
      *
      * @return the removed entry, or null if the chain is empty
      */
     public T remove()
     {
-        if (firstNode == null)
-        {
-            return null;
-        }
-        T result = firstNode.data;
-        firstNode = firstNode.next;
-        numberOfEntries--;
-        return result;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Removes the first occurrence of a given entry from this chain.
+     * Removes the first occurrence of a given entry from this chain,
+     * using equals(). O(n).
      *
-     * @param anEntry the entry to be removed
-     * @return true if the removal was successful, or false if not
+     * @param anEntry the entry to be removed; null is never found
+     * @return true if the removal was successful, or false if anEntry
+     *         is absent or null
      */
     public boolean remove(T anEntry)
     {
-        if (anEntry == null || firstNode == null)
-        {
-            return false;
-        }
-        if (anEntry.equals(firstNode.data))
-        {
-            firstNode = firstNode.next;
-            numberOfEntries--;
-            return true;
-        }
-        Node<T> previous = firstNode;
-        Node<T> current = firstNode.next;
-        while (current != null)
-        {
-            if (anEntry.equals(current.data))
-            {
-                previous.next = current.next;
-                numberOfEntries--;
-                return true;
-            }
-            previous = current;
-            current = current.next;
-        }
-        return false;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Removes all entries from this chain.
+     * Removes and returns the entry at the given position. O(n).
+     *
+     * @param index the zero-based position
+     * @return the removed entry
+     * @throws IndexOutOfBoundsException if index is negative or
+     *         index is greater than or equal to size()
+     */
+    public T removeAt(int index)
+    {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * Removes all entries from this chain. O(1).
      */
     public void clear()
     {
-        firstNode = null;
-        numberOfEntries = 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Gets the entry at the given position without removing it.
+     * Gets the entry at the given position without removing it. O(n):
+     * walks from the head, so calling get(i) in a loop is O(n^2); use
+     * toArray instead to visit every entry.
      *
      * @param index the zero-based position
      * @return the entry at that position
@@ -155,79 +151,68 @@ public class LinkedChain<T>
      */
     public T get(int index)
     {
-        if (index < 0 || index >= numberOfEntries)
-        {
-            throw new IndexOutOfBoundsException(
-                "Index " + index + " out of bounds for size "
-                + numberOfEntries);
-        }
-        Node<T> current = firstNode;
-        for (int i = 0; i < index; i++)
-        {
-            current = current.next;
-        }
-        return current.data;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Tests whether this chain contains a given entry.
+     * Finds the position of the first entry equal to a given entry.
+     * O(n).
      *
-     * @param anEntry the entry to locate
+     * @param anEntry the entry to locate; null is never found
+     * @return the zero-based index of the first match, or -1 if
+     *         anEntry is absent or null
+     */
+    public int indexOf(T anEntry)
+    {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * Tests whether this chain contains a given entry. O(n).
+     *
+     * @param anEntry the entry to locate; null is never found
      * @return true if the chain contains anEntry, or false if not
      */
     public boolean contains(T anEntry)
     {
-        return count(anEntry) > 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
      * Counts the number of times a given entry appears in this chain.
+     * O(n): full scan.
      *
-     * @param anEntry the entry to be counted
+     * @param anEntry the entry to be counted; null is never found
      * @return the number of times anEntry appears in the chain
      */
     public int count(T anEntry)
     {
-        if (anEntry == null)
-        {
-            return 0;
-        }
-        int frequency = 0;
-        Node<T> current = firstNode;
-        while (current != null)
-        {
-            if (anEntry.equals(current.data))
-            {
-                frequency++;
-            }
-            current = current.next;
-        }
-        return frequency;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Gets the number of entries currently in this chain.
+     * Gets the number of entries currently in this chain. O(1).
      *
      * @return the integer number of entries in the chain
      */
     public int size()
     {
-        return numberOfEntries;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
-     * Sees whether this chain is empty.
+     * Sees whether this chain is empty. O(1).
      *
      * @return true if the chain has no entries, or false if not
      */
     public boolean isEmpty()
     {
-        return numberOfEntries == 0;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
      * Copies every entry in this chain into the given array, first entry
-     * first.
+     * first. Usage: chain.toArray(new Song[chain.size()]). O(n).
      *
      * @param values an array of the correct type to fill; it must have
      *               length at least size()
@@ -236,63 +221,19 @@ public class LinkedChain<T>
      */
     public T[] toArray(T[] values)
     {
-        if (values == null)
-        {
-            throw new IllegalArgumentException("Array must not be null");
-        }
-        if (values.length < numberOfEntries)
-        {
-            throw new IllegalArgumentException(
-                "Array of length " + values.length
-                + " is too small for " + numberOfEntries + " entries");
-        }
-        int index = 0;
-        Node<T> current = firstNode;
-        while (current != null)
-        {
-            values[index] = current.data;
-            index++;
-            current = current.next;
-        }
-        return values;
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
      * Returns a readable listing of the chain, first entry first,
-     * e.g. "[a, b, c]".
+     * e.g. "[a, b, c]", or "[]" when empty. O(n).
      *
      * @return a string representation of this chain
      */
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder("[");
-        Node<T> current = firstNode;
-        while (current != null)
-        {
-            sb.append(current.data);
-            if (current.next != null)
-            {
-                sb.append(", ");
-            }
-            current = current.next;
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
-    /**
-     * Rejects null entries.
-     *
-     * @param entry the entry to check
-     * @throws IllegalArgumentException if entry is null
-     */
-    private void requireNonNull(T entry)
-    {
-        if (entry == null)
-        {
-            throw new IllegalArgumentException("Cannot add null to chain");
-        }
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**

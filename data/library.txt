@@ -1,0 +1,10 @@
+Espresso|Sabrina Carpenter|Short n' Sweet|175
+Please Please Please|Sabrina Carpenter|Short n' Sweet|186
+Bohemian Rhapsody|Queen|A Night at the Opera|354
+Blinding Lights|The Weeknd|After Hours|200
+Levitating|Dua Lipa|Future Nostalgia|203
+Espresso|Sabrina Carpenter|Short n' Sweet|175
+Missing Duration|Some Artist|Some Album
+Bad Number|Some Artist|Some Album|three
+|Blank Title Artist|Some Album|180
+Zero Length|Some Artist|Some Album|0
