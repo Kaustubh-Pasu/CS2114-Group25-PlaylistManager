@@ -137,7 +137,14 @@ public class LinkedChain<T>
      */
     public T remove()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (firstNode == null)
+        {
+            return null;
+        }
+        T result = firstNode.data;
+        firstNode = firstNode.next;
+        numberOfEntries--;
+        return result;
     }
 
     /**
@@ -150,7 +157,30 @@ public class LinkedChain<T>
      */
     public boolean remove(T anEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (anEntry == null || firstNode == null)
+        {
+            return false;
+        }
+        if (anEntry.equals(firstNode.data))
+        {
+            firstNode = firstNode.next;
+            numberOfEntries--;
+            return true;
+        }
+        Node<T> previous = firstNode;
+        Node<T> current = firstNode.next;
+        while (current != null)
+        {
+            if (anEntry.equals(current.data))
+            {
+                previous.next = current.next;
+                numberOfEntries--;
+                return true;
+            }
+            previous = current;
+            current = current.next;
+        }
+        return false;
     }
 
     /**
@@ -185,7 +215,8 @@ public class LinkedChain<T>
      */
     public void clear()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        firstNode = null;
+        numberOfEntries = 0;
     }
 
     /**
@@ -240,7 +271,7 @@ public class LinkedChain<T>
      */
     public boolean contains(T anEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return indexOf(anEntry) >= 0;
     }
 
     /**
@@ -252,7 +283,21 @@ public class LinkedChain<T>
      */
     public int count(T anEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (anEntry == null)
+        {
+            return 0;
+        }
+        int frequency = 0;
+        Node<T> current = firstNode;
+        while (current != null)
+        {
+            if (anEntry.equals(current.data))
+            {
+                frequency++;
+            }
+            current = current.next;
+        }
+        return frequency;
     }
 
     /**
@@ -286,7 +331,25 @@ public class LinkedChain<T>
      */
     public T[] toArray(T[] values)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (values == null)
+        {
+            throw new IllegalArgumentException("Array must not be null");
+        }
+        if (values.length < numberOfEntries)
+        {
+            throw new IllegalArgumentException(
+                "Array of length " + values.length
+                + " is too small for " + numberOfEntries + " entries");
+        }
+        int index = 0;
+        Node<T> current = firstNode;
+        while (current != null)
+        {
+            values[index] = current.data;
+            index++;
+            current = current.next;
+        }
+        return values;
     }
 
     /**
