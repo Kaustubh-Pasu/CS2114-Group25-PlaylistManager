@@ -62,7 +62,10 @@ public class LinkedChain<T>
      */
     public boolean add(T newEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        requireNonNull(newEntry);
+        firstNode = new Node<T>(newEntry, firstNode);
+        numberOfEntries++;
+        return true;
     }
 
     /**
@@ -75,7 +78,23 @@ public class LinkedChain<T>
      */
     public boolean addToEnd(T newEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        requireNonNull(newEntry);
+        Node<T> newNode = new Node<T>(newEntry);
+        if (firstNode == null)
+        {
+            firstNode = newNode;
+        }
+        else
+        {
+            Node<T> current = firstNode;
+            while (current.next != null)
+            {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+        numberOfEntries++;
+        return true;
     }
 
     /**
@@ -151,7 +170,8 @@ public class LinkedChain<T>
      */
     public T get(int index)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        checkIndex(index);
+        return nodeAt(index).data;
     }
 
     /**
@@ -197,7 +217,7 @@ public class LinkedChain<T>
      */
     public int size()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return numberOfEntries;
     }
 
     /**
@@ -207,7 +227,7 @@ public class LinkedChain<T>
      */
     public boolean isEmpty()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return numberOfEntries == 0;
     }
 
     /**
@@ -233,7 +253,67 @@ public class LinkedChain<T>
     @Override
     public String toString()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        StringBuilder sb = new StringBuilder("[");
+        Node<T> current = firstNode;
+        while (current != null)
+        {
+            sb.append(current.data);
+            if (current.next != null)
+            {
+                sb.append(", ");
+            }
+            current = current.next;
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    /**
+     * Rejects null entries.
+     *
+     * @param entry the entry to check
+     * @throws IllegalArgumentException if entry is null
+     */
+    private void requireNonNull(T entry)
+    {
+        if (entry == null)
+        {
+            throw new IllegalArgumentException("Cannot add null to chain");
+        }
+    }
+
+    /**
+     * Rejects an index that does not name an existing entry.
+     *
+     * @param index the index to check
+     * @throws IndexOutOfBoundsException if index is negative or
+     *         index is greater than or equal to size()
+     */
+    private void checkIndex(int index)
+    {
+        if (index < 0 || index >= numberOfEntries)
+        {
+            throw new IndexOutOfBoundsException(
+                "Index " + index + " out of bounds for size "
+                + numberOfEntries);
+        }
+    }
+
+    /**
+     * Walks from the head to the node at a position. The caller must
+     * have checked that 0 &lt;= index &lt; size().
+     *
+     * @param index the zero-based position
+     * @return the node at that position
+     */
+    private Node<T> nodeAt(int index)
+    {
+        Node<T> current = firstNode;
+        for (int i = 0; i < index; i++)
+        {
+            current = current.next;
+        }
+        return current;
     }
 
     /**
