@@ -110,7 +110,23 @@ public class LinkedChain<T>
      */
     public void addAt(int index, T newEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (index < 0 || index > numberOfEntries)
+        {
+            throw new IndexOutOfBoundsException(
+                "Index " + index + " out of bounds for size "
+                + numberOfEntries);
+        }
+        requireNonNull(newEntry);
+        if (index == 0)
+        {
+            firstNode = new Node<T>(newEntry, firstNode);
+        }
+        else
+        {
+            Node<T> previous = nodeAt(index - 1);
+            previous.next = new Node<T>(newEntry, previous.next);
+        }
+        numberOfEntries++;
     }
 
     /**
@@ -147,7 +163,21 @@ public class LinkedChain<T>
      */
     public T removeAt(int index)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        checkIndex(index);
+        T result;
+        if (index == 0)
+        {
+            result = firstNode.data;
+            firstNode = firstNode.next;
+        }
+        else
+        {
+            Node<T> previous = nodeAt(index - 1);
+            result = previous.next.data;
+            previous.next = previous.next.next;
+        }
+        numberOfEntries--;
+        return result;
     }
 
     /**
@@ -184,7 +214,22 @@ public class LinkedChain<T>
      */
     public int indexOf(T anEntry)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (anEntry == null)
+        {
+            return -1;
+        }
+        int index = 0;
+        Node<T> current = firstNode;
+        while (current != null)
+        {
+            if (anEntry.equals(current.data))
+            {
+                return index;
+            }
+            index++;
+            current = current.next;
+        }
+        return -1;
     }
 
     /**
