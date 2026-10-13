@@ -1,10 +1,12 @@
 package playlist;
 
+import java.util.Objects;
+
 /**
  * A titled group of tracks loaded from the library file. Tracks keep
  * file order.
  *
- * @author Person B
+ * @author Colin Fahmy
  * @version October 2026
  */
 public class Album
@@ -13,12 +15,6 @@ public class Album
     private String artist;
     private LinkedChain<Song> tracks;
 
-    /**
-     * Creates an empty album. O(1).
-     *
-     * @param title the album title
-     * @param artist the album artist
-     */
     public Album(String title, String artist)
     {
         this.title = title;
@@ -26,59 +22,49 @@ public class Album
         this.tracks = new LinkedChain<Song>();
     }
 
-    /**
-     * Appends a track via addToEnd. O(n).
-     *
-     * @param song the track to add
-     * @throws IllegalArgumentException if song is null
-     */
     public void addTrack(Song song)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (song == null)
+        {
+            throw new IllegalArgumentException("Song cannot be null.");
+        }
+
+        tracks.addToEnd(song);
     }
 
-    /**
-     * Returns the tracks. O(1).
-     *
-     * @return the chain of tracks in file order
-     */
     public LinkedChain<Song> getTracks()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return tracks;
     }
 
-    /**
-     * True if other is an Album with the same title and artist. O(1).
-     *
-     * @param other the object to compare with
-     * @return true if equal, or false if not
-     */
     @Override
     public boolean equals(Object other)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (this == other)
+        {
+            return true;
+        }
+
+        if (!(other instanceof Album))
+        {
+            return false;
+        }
+
+        Album otherAlbum = (Album)other;
+
+        return title.equals(otherAlbum.title)
+            && artist.equals(otherAlbum.artist);
     }
 
-    /**
-     * Returns a hash code consistent with equals. O(1).
-     *
-     * @return the hash code
-     */
     @Override
     public int hashCode()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return Objects.hash(title, artist);
     }
 
-    /**
-     * Returns the title, artist and track count, e.g. "... 2 tracks".
-     * O(1).
-     *
-     * @return the display string
-     */
     @Override
     public String toString()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return title + " - " + artist + " (" + tracks.size() + " tracks)";
     }
 }
