@@ -59,10 +59,10 @@ class LibraryLoaderTest {
         assertEquals(1, msgs.size());
     }
 
-    @Test void duplicateSongDoesNotCrashOrDuplicate() throws IOException {
+    @Test void duplicateSongIsKept() throws IOException {
         String f = write("A|X|Alb|100\nA|X|Alb|100\n");
         LinkedChain<Album> lib = LibraryLoader.loadLibrary(f, m -> {});
-        assertEquals(1, lib.get(0).getTracks().size());
+        assertEquals(2, lib.get(0).getTracks().size());
     }
 
     @Test void emptyFileGivesEmptyChain() throws IOException {

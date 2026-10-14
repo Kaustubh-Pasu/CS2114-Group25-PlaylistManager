@@ -77,7 +77,7 @@ public class LibraryLoader {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("duration is not a number: '" + f[3].trim() + "'");
         }
-        // Song constructor validates; Album.addTrack may reject duplicates
+        // Song constructor validates; duplicates are allowed per Spec
         Song song = new Song(f[0].trim(), f[1].trim(), f[2].trim(), duration);
 
         Album probe = new Album(f[2].trim(), f[1].trim());
@@ -86,7 +86,7 @@ public class LibraryLoader {
             library.get(idx).addTrack(song);
         } else {
             probe.addTrack(song);
-            library.add(probe);
+            library.addToEnd(probe);
         }
     }
 }
