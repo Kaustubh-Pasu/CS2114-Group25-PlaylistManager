@@ -47,7 +47,7 @@ public class PlaylistApp {
      * @param args optional first argument specifying a custom library path
      */
     public static void main(String[] args) {
-        String path = args.length > 0 ? args[0] : "data/sample-library.txt";
+        String path = args.length > 0 ? args[0] : "data/library.txt";
         LinkedChain<Album> lib = LibraryLoader.loadLibrary(path, System.out::println);
         new PlaylistApp(lib, new Playlist("My Playlist")).showMenu();
     }

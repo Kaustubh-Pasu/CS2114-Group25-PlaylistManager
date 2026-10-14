@@ -65,6 +65,14 @@ class LibraryLoaderTest {
         assertEquals(2, lib.get(0).getTracks().size());
     }
 
+    @Test void oneArgLoadsValidFile() throws IOException {
+        assertEquals(1, LibraryLoader.loadLibrary(write("A|X|Alb|100\n")).size());
+    }
+
+    @Test void oneArgMissingFileReturnsEmptyChain() {
+        assertEquals(0, LibraryLoader.loadLibrary(dir.resolve("nope.txt").toString()).size());
+    }
+
     @Test void emptyFileGivesEmptyChain() throws IOException {
         assertEquals(0, LibraryLoader.loadLibrary(write(""), m -> {}).size());
     }
