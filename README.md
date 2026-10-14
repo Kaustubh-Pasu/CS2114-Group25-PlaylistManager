@@ -218,7 +218,7 @@ stops at the first match instead of counting every match.
 | File                      | Who                 | How                                                                                                                             |
 | :------------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
 | `LinkedChain.java`        | Kaustubh Pasumarthi | Revised the provided class: implemented given methods, added `addAt`, `removeAt`, `indexOf` and private helpers; GenAI-assisted |
-| `LinkedChainTest.java`    | Kaustubh Pasumarthi | Wrote; GenAI checked coverage against Spec Section 7                                                                            |
+| `LinkedChainTest.java`    | Kaustubh Pasumarthi | Wrote                                                                        |
 | `Song.java`               | Colin Fahmy         | Wrote                                                                                                                           |
 | `SongTest.java`           | Colin Fahmy         | Wrote                                                                                                                           |
 | `Album.java`              | Colin Fahmy         | Wrote                                                                                                                           |
@@ -229,9 +229,9 @@ stops at the first match instead of counting every match.
 | `PlaylistTest.java`       | Kim Delgadillo      | Wrote                                                                                                                           |
 | `MusicPlayer.java`        | Kim Delgadillo      | Wrote                                                                                                                           |
 | `MusicPlayerTest.java`    | Kim Delgadillo      | Wrote                                                                                                                           |
-| `LibraryLoader.java`      | Krish Joshi         | Krish wrote                                                                                                                     |
-| `LibraryLoaderTest.java`  | Krish Joshi         | Krish wrote                                                                                                                     |
-| `PlaylistApp.java`        | Krish Joshi         | Krish wrote                                                                                                                     |
+| `LibraryLoader.java`      | Krish Joshi         | Wrote                                                                                                                     |
+| `LibraryLoaderTest.java`  | Krish Joshi         | Wrote                                                                                                                     |
+| `PlaylistApp.java`        | Krish Joshi         | Wrote                                                                                                                     |
 | `PlaylistAppTest.java`    | Kaustubh Pasumarthi | Wrote                                                                                                                           |
 | Merging and integration   | Kaustubh Pasumarthi | Merged the four feature branches, ran the full suite; GenAI-assisted                                                            |
 
