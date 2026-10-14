@@ -56,6 +56,7 @@ class SongTest
         assertNotEquals(song1, differentDuration);
         assertNotEquals(song1, null);
         assertNotEquals(song1, "Song");
+        assertNotEquals(song1, new Album("Album", "Artist"));
     }
 
     @Test
@@ -88,5 +89,14 @@ class SongTest
             new Song("Test", "Artist", "Album", 125);
 
         assertEquals("Test - Artist (2:05)", song.toString());
+    }
+
+    @Test
+    void testToStringSpecialCharacters()
+    {
+        Song song =
+            new Song("Rock & \"Roll\", null", "Artist", "Album", 60);
+
+        assertEquals("Rock & \"Roll\", null - Artist (1:00)", song.toString());
     }
 }
