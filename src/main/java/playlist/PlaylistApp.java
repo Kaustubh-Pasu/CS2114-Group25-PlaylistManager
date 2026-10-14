@@ -174,7 +174,7 @@ public class PlaylistApp {
      */
     private void next() {
         if (!player.nextTrack()) {
-            System.out.println(playlist.size() == 0 ? "Nothing to play" : "End of playlist reached");
+            System.out.println(stuckMessage("End of playlist reached"));
             return;
         }
         System.out.println("Now playing: " + player.getCurrentSong());
@@ -185,10 +185,22 @@ public class PlaylistApp {
      */
     private void previous() {
         if (!player.previousTrack()) {
-            System.out.println(playlist.size() == 0 ? "Nothing to play" : "Start of playlist reached");
+            System.out.println(stuckMessage("Start of playlist reached"));
             return;
         }
         System.out.println("Now playing: " + player.getCurrentSong());
+    }
+
+    /**
+     * Explains why next or previous could not move.
+     *
+     * @param atEdge the message to use when a song is selected
+     * @return "Nothing to play", "Press Play to start", or atEdge
+     */
+    private String stuckMessage(String atEdge) {
+        if (playlist.size() == 0) return "Nothing to play";
+        if (player.getCurrentSong() == null) return "Press Play to start";
+        return atEdge;
     }
 
     // ---------- input helpers: validate and re-prompt ----------

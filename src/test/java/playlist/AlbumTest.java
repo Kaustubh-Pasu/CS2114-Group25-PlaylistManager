@@ -30,6 +30,65 @@ class AlbumTest
     }
 
     @Test
+    void testConstructorRejectsNullOrBlank()
+    {
+        assertThrows(IllegalArgumentException.class,
+            () -> new Album(null, "Artist"));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Album("Album", null));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Album("   ", "Artist"));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Album("Album", ""));
+    }
+
+    @Test
+    void testAddTrackKeepsFileOrder()
+    {
+        Album album = new Album("Album", "Artist");
+        Song first = new Song("First", "Artist", "Album", 100);
+        Song second = new Song("Second", "Artist", "Album", 200);
+        Song third = new Song("Third", "Artist", "Album", 300);
+
+        album.addTrack(first);
+        album.addTrack(second);
+        album.addTrack(third);
+
+        assertArrayEquals(new Song[] {first, second, third},
+            album.getTracks().toArray(new Song[3]));
+    }
+
+    @Test
+    void testAddTrackAllowsDuplicates()
+    {
+        Album album = new Album("Album", "Artist");
+        Song song = new Song("Song", "Artist", "Album", 100);
+
+        album.addTrack(song);
+        album.addTrack(song);
+
+        assertEquals(2, album.getTracks().size());
+    }
+
+    @Test
+    void testAddTrackNullLeavesTracksUnchanged()
+    {
+        Album album = new Album("Album", "Artist");
+        album.addTrack(new Song("Song", "Artist", "Album", 100));
+
+        assertThrows(IllegalArgumentException.class,
+            () -> album.addTrack(null));
+        assertEquals(1, album.getTracks().size());
+    }
+
+    @Test
+    void testEqualsIsCaseSensitive()
+    {
+        assertNotEquals(new Album("Album", "Artist"),
+            new Album("album", "Artist"));
+    }
+
+    @Test
     void testAddTrackRejectsNull()
     {
         Album album = new Album("Album", "Artist");

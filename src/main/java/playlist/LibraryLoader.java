@@ -2,6 +2,7 @@ package playlist;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 /**
  * Reads the song-library file and builds a chain of albums. Skips and
@@ -39,7 +40,12 @@ public class LibraryLoader {
      */
     public static LinkedChain<Album> loadLibrary(String path, Consumer<String> report) {
         LinkedChain<Album> library = new LinkedChain<>();
-        try (BufferedReader in = new BufferedReader(new FileReader(path))) {
+        if (path == null) {
+            report.accept("Library file not found or unreadable: null");
+            return library;
+        }
+        try (BufferedReader in = new BufferedReader(
+                new FileReader(path, StandardCharsets.UTF_8))) {
             String line;
             int lineNo = 0;
             while ((line = in.readLine()) != null) {

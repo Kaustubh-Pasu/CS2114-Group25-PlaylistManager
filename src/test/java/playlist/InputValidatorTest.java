@@ -45,6 +45,26 @@ class InputValidatorTest
     }
 
     @Test
+    void testCheckIndexSpecCases()
+    {
+        assertTrue(InputValidator.checkIndex(2, 5));
+        assertTrue(InputValidator.checkIndex(4, 5));
+        assertFalse(InputValidator.checkIndex(-1, 5));
+        assertFalse(InputValidator.checkIndex(5, 5));
+        assertFalse(InputValidator.checkIndex(Integer.MIN_VALUE, 5));
+        assertFalse(InputValidator.checkIndex(Integer.MAX_VALUE, 5));
+    }
+
+    @Test
+    void testCheckTitleSingleCharAndSpecialCharacters()
+    {
+        assertTrue(InputValidator.checkTitle("a"));
+        assertTrue(InputValidator.checkTitle("Rock & \"Roll\""));
+        assertTrue(InputValidator.checkTitle("  padded  "));
+        assertFalse(InputValidator.checkTitle("\t\n"));
+    }
+
+    @Test
     void testCheckSong()
     {
         Song song = new Song("Song", "Artist", "Album", 180);
