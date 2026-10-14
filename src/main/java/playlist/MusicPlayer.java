@@ -7,7 +7,7 @@ package playlist;
  * Invariant: currentIndex is -1 or in [0, playlist.size()-1]; if the
  * playlist is empty it is -1 and playing is false.
  *
- * @author Person C
+ * @author Kim Delgadillo
  * @version October 2026
  */
 public class MusicPlayer
@@ -35,7 +35,18 @@ public class MusicPlayer
      */
     public boolean play()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (playlist.size() == 0)
+        {
+            return false;
+        }
+
+        if (currentIndex == -1)
+        {
+            currentIndex = 0;
+        }
+
+        playing = true;
+        return true;
     }
 
     /**
@@ -43,7 +54,7 @@ public class MusicPlayer
      */
     public void pause()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        playing = false;
     }
 
     /**
@@ -54,7 +65,14 @@ public class MusicPlayer
      */
     public boolean nextTrack()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (currentIndex >= 0
+            && currentIndex < playlist.size() - 1)
+        {
+            currentIndex++;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -65,7 +83,13 @@ public class MusicPlayer
      */
     public boolean previousTrack()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            return true;
+        }
+        
+        return false;
     }
 
     /**
@@ -75,6 +99,11 @@ public class MusicPlayer
      */
     public Song getCurrentSong()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (currentIndex == -1)
+        {
+            return null;
+        }
+        
+        return playlist.getSong(currentIndex);
     }
 }

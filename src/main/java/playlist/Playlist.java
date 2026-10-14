@@ -4,7 +4,7 @@ package playlist;
  * The user's ordered list of songs: add, remove, move, shuffle, read.
  * Duplicates are allowed.
  *
- * @author Person C
+ * @author Kim Delgadillo
  * @version October 2026
  */
 public class Playlist
@@ -31,7 +31,12 @@ public class Playlist
      */
     public void addSong(Song song)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (song == null)
+        {
+            throw new IllegalArgumentException("Song cannot be null.");
+        }
+
+        songs.addToEnd(song);
     }
 
     /**
@@ -43,7 +48,7 @@ public class Playlist
      */
     public boolean removeSong(Song song)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return songs.remove(song);
     }
 
     /**
@@ -58,7 +63,15 @@ public class Playlist
      */
     public void moveSong(int from, int to)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (from < 0 || from >= songs.size()
+            || to < 0 || to >= songs.size())
+        {
+            throw new IndexOutOfBoundsException(
+                "Valid range: 0 to " + (songs.size() - 1));
+        }
+
+        Song song = songs.removeAt(from);
+        songs.addAt(to, song);
     }
 
     /**
@@ -68,7 +81,30 @@ public class Playlist
      */
     public void shuffle()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (songs.size() < 2)
+        {
+            return;
+        }
+
+        Song[] array = songs.toArray(new Song[songs.size()]);
+
+        java.util.Random random = new java.util.Random();
+
+        for (int i = array.length - 1; i > 0; i--)
+        {
+            int j = random.nextInt(i + 1);
+
+            Song temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        songs.clear();
+
+        for (Song song : array)
+        {
+            songs.addToEnd(song);
+        }
     }
 
     /**
@@ -80,7 +116,7 @@ public class Playlist
      */
     public Song getSong(int i)
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return songs.get(i);
     }
 
     /**
@@ -90,6 +126,6 @@ public class Playlist
      */
     public int size()
     {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return songs.size();
     }
 }
