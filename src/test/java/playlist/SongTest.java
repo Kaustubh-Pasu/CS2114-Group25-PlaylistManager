@@ -45,6 +45,52 @@ class SongTest
     }
 
     @Test
+    void testConstructorRejectsEveryBadField()
+    {
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("   ", "Artist", "Album", 100));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("Title", null, "Album", 100));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("Title", "\t", "Album", 100));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("Title", "Artist", null, 100));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("Title", "Artist", "  ", 100));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("Title", "Artist", "Album", -1));
+        assertThrows(IllegalArgumentException.class,
+            () -> new Song("Title", "Artist", "Album", Integer.MIN_VALUE));
+    }
+
+    @Test
+    void testConstructorAcceptsOneSecond()
+    {
+        assertEquals(1, new Song("T", "A", "B", 1).getDurationSec());
+    }
+
+    @Test
+    void testEqualsComparesEveryField()
+    {
+        Song song = new Song("Song", "Artist", "Album", 180);
+
+        assertEquals(song, song);
+        assertNotEquals(song, new Song("Other", "Artist", "Album", 180));
+        assertNotEquals(song, new Song("Song", "Other", "Album", 180));
+        assertNotEquals(song, new Song("Song", "Artist", "Other", 180));
+        assertNotEquals(song, new Song("song", "Artist", "Album", 180));
+    }
+
+    @Test
+    void testToStringLongSong()
+    {
+        assertEquals("Long - Artist (61:01)",
+            new Song("Long", "Artist", "Album", 3661).toString());
+        assertEquals("Short - Artist (0:59)",
+            new Song("Short", "Artist", "Album", 59).toString());
+    }
+
+    @Test
     void testEquals()
     {
         Song song1 = new Song("Song", "Artist", "Album", 180);

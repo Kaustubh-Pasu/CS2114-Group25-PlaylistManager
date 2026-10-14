@@ -326,4 +326,150 @@ public class MusicPlayerTest
         assertTrue(player.play());
         assertEquals(song1, player.getCurrentSong());
     }
+
+
+    // Playing Flag Tests
+    // ----------------------------------------------------------
+
+    @Test
+    public void testNotPlayingInitially()
+    {
+        assertFalse(player.isPlaying());
+    }
+
+    @Test
+    public void testPlaySetsPlaying()
+    {
+        playlist.addSong(song1);
+
+        player.play();
+
+        assertTrue(player.isPlaying());
+    }
+
+    @Test
+    public void testPlayEmptyStaysStopped()
+    {
+        player.play();
+
+        assertFalse(player.isPlaying());
+    }
+
+    @Test
+    public void testPauseClearsPlaying()
+    {
+        playlist.addSong(song1);
+
+        player.play();
+        player.pause();
+
+        assertFalse(player.isPlaying());
+    }
+
+    @Test
+    public void testPauseWhenStoppedStaysStopped()
+    {
+        player.pause();
+
+        assertFalse(player.isPlaying());
+    }
+
+    @Test
+    public void testNavigationKeepsPlayingFlag()
+    {
+        playlist.addSong(song1);
+        playlist.addSong(song2);
+
+        player.play();
+        player.nextTrack();
+
+        assertTrue(player.isPlaying());
+    }
+
+    @Test
+    public void testConstructorRejectsNull()
+    {
+        assertThrows(IllegalArgumentException.class,
+            () -> new MusicPlayer(null));
+    }
+
+
+    // Playlist Changes Under The Player
+    // ----------------------------------------------------------
+
+    @Test
+    public void testCurrentSongAfterLastSongRemoved()
+    {
+        playlist.addSong(song1);
+        playlist.addSong(song2);
+
+        player.play();
+        player.nextTrack();
+        playlist.removeSong(song2);
+
+        assertEquals(song1, player.getCurrentSong());
+        assertTrue(player.play());
+        assertEquals(song1, player.getCurrentSong());
+    }
+
+    @Test
+    public void testPlaylistEmptiedWhilePlaying()
+    {
+        playlist.addSong(song1);
+
+        player.play();
+        playlist.removeSong(song1);
+
+        assertNull(player.getCurrentSong());
+        assertFalse(player.isPlaying());
+        assertFalse(player.play());
+        assertFalse(player.nextTrack());
+        assertFalse(player.previousTrack());
+    }
+
+    @Test
+    public void testPlaylistEmptiedThenRefilled()
+    {
+        playlist.addSong(song1);
+        player.play();
+        playlist.removeSong(song1);
+
+        playlist.addSong(song2);
+
+        assertTrue(player.play());
+        assertEquals(song2, player.getCurrentSong());
+    }
+
+    @Test
+    public void testPreviousAfterPlaylistShrinks()
+    {
+        playlist.addSong(song1);
+        playlist.addSong(song2);
+        playlist.addSong(song3);
+
+        player.play();
+        player.nextTrack();
+        player.nextTrack();
+        playlist.removeSong(song3);
+        playlist.removeSong(song2);
+
+        assertFalse(player.previousTrack());
+        assertEquals(song1, player.getCurrentSong());
+    }
+
+    @Test
+    public void testNextAfterPlaylistShrinks()
+    {
+        playlist.addSong(song1);
+        playlist.addSong(song2);
+        playlist.addSong(song3);
+
+        player.play();
+        player.nextTrack();
+        player.nextTrack();
+        playlist.removeSong(song3);
+
+        assertFalse(player.nextTrack());
+        assertEquals(song2, player.getCurrentSong());
+    }
 }

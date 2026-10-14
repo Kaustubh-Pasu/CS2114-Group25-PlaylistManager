@@ -26,7 +26,7 @@ java -cp target/classes playlist.PlaylistApp path/to/other-library.txt
 mvn test                                      # run all JUnit 5 tests
 ```
 
-`mvn test` runs 140 tests across 8 test classes; all pass.
+`mvn test` runs 200 tests across 8 test classes; all pass.
 
 ### MVP path to try
 

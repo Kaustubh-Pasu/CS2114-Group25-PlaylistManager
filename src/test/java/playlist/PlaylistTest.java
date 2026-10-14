@@ -347,4 +347,145 @@ public class PlaylistTest
         assertThrows(IndexOutOfBoundsException.class,
             () -> playlist.getSong(0));
     }
+
+
+    // Spec Section 7 Fixture P = [A, B, C]
+    // ----------------------------------------------------------
+
+    /**
+     * Fills the playlist with song1, song2, song3 (A, B, C).
+     */
+    private void fillABC()
+    {
+        playlist.addSong(song1);
+        playlist.addSong(song2);
+        playlist.addSong(song3);
+    }
+
+    /**
+     * Asserts the playlist holds exactly the given songs in order.
+     */
+    private void assertSongs(Song... expected)
+    {
+        assertEquals(expected.length, playlist.size());
+        for (int i = 0; i < expected.length; i++)
+        {
+            assertEquals(expected[i], playlist.getSong(i));
+        }
+    }
+
+    @Test
+    public void testMoveSongToMiddle()
+    {
+        fillABC();
+
+        playlist.moveSong(0, 1);
+
+        assertSongs(song2, song1, song3);
+    }
+
+    @Test
+    public void testMoveSongToLastFromMiddle()
+    {
+        fillABC();
+
+        playlist.moveSong(1, 2);
+
+        assertSongs(song1, song3, song2);
+    }
+
+    @Test
+    public void testMoveSongToSizeIsRejected()
+    {
+        fillABC();
+
+        assertThrows(IndexOutOfBoundsException.class,
+            () -> playlist.moveSong(0, 3));
+        assertThrows(IndexOutOfBoundsException.class,
+            () -> playlist.moveSong(3, 0));
+        assertThrows(IndexOutOfBoundsException.class,
+            () -> playlist.moveSong(0, -1));
+
+        assertSongs(song1, song2, song3);
+    }
+
+    @Test
+    public void testMoveSongMessageNamesValidRange()
+    {
+        fillABC();
+
+        IndexOutOfBoundsException e = assertThrows(
+            IndexOutOfBoundsException.class,
+            () -> playlist.moveSong(-1, 1));
+
+        assertTrue(e.getMessage().contains("0 to 2"));
+    }
+
+    @Test
+    public void testRemoveSongNull()
+    {
+        fillABC();
+
+        assertFalse(playlist.removeSong(null));
+        assertSongs(song1, song2, song3);
+    }
+
+    @Test
+    public void testRemoveLastRemainingSong()
+    {
+        playlist.addSong(song1);
+
+        assertTrue(playlist.removeSong(song1));
+        assertEquals(0, playlist.size());
+        assertFalse(playlist.removeSong(song1));
+    }
+
+    @Test
+    public void testAddSongNullLeavesPlaylistUnchanged()
+    {
+        fillABC();
+
+        assertThrows(IllegalArgumentException.class,
+            () -> playlist.addSong(null));
+        assertSongs(song1, song2, song3);
+    }
+
+    @Test
+    public void testAddAfterShuffleAppendsToEnd()
+    {
+        fillABC();
+        playlist.shuffle();
+
+        Song extra = new Song("Extra", "Artist", "Album", 100);
+        playlist.addSong(extra);
+
+        assertEquals(4, playlist.size());
+        assertEquals(extra, playlist.getSong(3));
+    }
+
+    /**
+     * Shuffles A, B, C many times. Every one of the 6 orders must show up,
+     * including the unchanged order. A broken Fisher-Yates (for example
+     * nextInt(i) instead of nextInt(i + 1)) never leaves the list in its
+     * original order, so this test would catch it. The chance a correct
+     * shuffle misses an order in 600 tries is below 1e-40.
+     */
+    @Test
+    public void testShuffleProducesEveryOrder()
+    {
+        java.util.Set<String> orders = new java.util.HashSet<String>();
+
+        for (int round = 0; round < 600; round++)
+        {
+            playlist = new Playlist("P");
+            fillABC();
+            playlist.shuffle();
+
+            orders.add(playlist.getSong(0).getTitle() + "|"
+                + playlist.getSong(1).getTitle() + "|"
+                + playlist.getSong(2).getTitle());
+        }
+
+        assertEquals(6, orders.size());
+    }
 }

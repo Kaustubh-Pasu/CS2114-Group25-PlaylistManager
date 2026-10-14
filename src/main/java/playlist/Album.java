@@ -17,6 +17,12 @@ public class Album
 
     public Album(String title, String artist)
     {
+        if (title == null || title.isBlank()
+            || artist == null || artist.isBlank())
+        {
+            throw new IllegalArgumentException("Invalid album data.");
+        }
+
         this.title = title;
         this.artist = artist;
         this.tracks = new LinkedChain<Song>();

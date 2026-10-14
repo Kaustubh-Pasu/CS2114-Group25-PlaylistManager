@@ -139,7 +139,171 @@ class PlaylistAppTest
         assertDoesNotThrow(() -> new PlaylistApp(library, playlist).showMenu());
     }
 
+    @Test
+    void testShowMenuRemoveSong()
+    {
+        input("2\nEspresso\n3\nESPRESSO\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Removed: Espresso"));
+        assertEquals(0, playlist.size());
+    }
+
+    @Test
+    void testShowMenuRemoveSongNotInPlaylist()
+    {
+        input("2\nEspresso\n3\nPlease Please Please\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Song not found"));
+        assertEquals(1, playlist.size());
+    }
+
+    @Test
+    void testShowMenuMoveSong()
+    {
+        input("2\nEspresso\n2\nPlease Please Please\n4\n0\n1\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Moved"));
+        assertEquals("Please Please Please", playlist.getSong(0).getTitle());
+        assertEquals("Espresso", playlist.getSong(1).getTitle());
+    }
+
+    @Test
+    void testShowMenuMoveNonNumericIndexReprompts()
+    {
+        input("2\nEspresso\n4\nfirst\n\n0\n0\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Enter a position from 0 to 0"));
+        assertTrue(out.toString().contains("Moved"));
+    }
+
+    @Test
+    void testShowMenuMoveOnEmptyPlaylist()
+    {
+        input("4\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Playlist is empty"));
+    }
+
+    @Test
+    void testShowMenuShowPlaylist()
+    {
+        input("2\nEspresso\n2\nPlease Please Please\n6\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        String text = out.toString();
+        assertTrue(text.contains("0: Espresso - Sabrina Carpenter (2:55)"));
+        assertTrue(text.contains("1: Please Please Please - Sabrina Carpenter (3:06)"));
+    }
+
+    @Test
+    void testShowMenuShowEmptyPlaylist()
+    {
+        input("6\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Playlist is empty"));
+    }
+
+    @Test
+    void testShowMenuShuffle()
+    {
+        input("2\nEspresso\n2\nPlease Please Please\n5\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Shuffled"));
+        assertEquals(2, playlist.size());
+    }
+
+    @Test
+    void testShowMenuShuffleOneSongIsSilent()
+    {
+        input("2\nEspresso\n5\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertFalse(out.toString().contains("Shuffled"));
+        assertEquals(1, playlist.size());
+    }
+
+    @Test
+    void testShowMenuPlayNextPreviousPause()
+    {
+        input("2\nEspresso\n2\nPlease Please Please\n7\n9\n9\n10\n10\n8\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        String text = out.toString();
+        assertTrue(text.contains("Now playing: Please Please Please"));
+        assertTrue(text.contains("End of playlist reached"));
+        assertTrue(text.contains("Start of playlist reached"));
+        assertTrue(text.contains("Paused"));
+    }
+
+    @Test
+    void testShowMenuNextBeforePlay()
+    {
+        input("2\nEspresso\n9\n10\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        String text = out.toString();
+        assertFalse(text.contains("End of playlist reached"));
+        assertFalse(text.contains("Start of playlist reached"));
+        assertTrue(text.contains("Press Play to start"));
+    }
+
+    @Test
+    void testShowMenuRemoveCurrentSongThenPlay()
+    {
+        // add both, play, skip to the second, remove it, play again
+        input("2\nEspresso\n2\nPlease Please Please\n7\n9\n"
+            + "3\nPlease Please Please\n7\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        String text = out.toString();
+        assertFalse(text.contains("Something went wrong"));
+        assertTrue(text.lastIndexOf("Now playing: Espresso")
+            > text.lastIndexOf("Removed:"));
+    }
+
+    @Test
+    void testShowMenuRemoveOnlySongThenNext()
+    {
+        input("2\nEspresso\n7\n3\nEspresso\n9\n7\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        String text = out.toString();
+        assertFalse(text.contains("Something went wrong"));
+        assertTrue(text.lastIndexOf("Nothing to play")
+            > text.lastIndexOf("Removed:"));
+    }
+
+    @Test
+    void testShowMenuTooLongTitleReprompts()
+    {
+        input("2\n" + "a".repeat(201) + "\nEspresso\n0\n");
+        new PlaylistApp(library, playlist).showMenu();
+        assertTrue(out.toString().contains("Title must be 1-200 characters"));
+        assertEquals(1, playlist.size());
+    }
+
+    @Test
+    void testShowMenuOutOfRangeAndBlankChoices()
+    {
+        input("11\n\n-1\n 0 \n");
+        new PlaylistApp(library, playlist).showMenu();
+        String text = out.toString();
+        assertEquals(3, text.split("Invalid option", -1).length - 1);
+    }
+
+    @Test
+    void testShowMenuEndOfInputMidPrompt()
+    {
+        input("2\n");
+        assertDoesNotThrow(() -> new PlaylistApp(library, playlist).showMenu());
+        assertEquals(0, playlist.size());
+    }
+
     // ---------- main ----------
+
+    @Test
+    void testMainWithNoArgsUsesBundledLibrary()
+    {
+        input("1\n0\n");
+        PlaylistApp.main(new String[0]);
+        String text = out.toString();
+        assertTrue(text.contains("Bohemian Rhapsody"));
+        assertTrue(text.contains("Line 7 skipped"));
+    }
 
     @Test
     void testMainLoadsLibraryFile() throws IOException

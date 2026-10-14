@@ -20,9 +20,15 @@ public class MusicPlayer
      * Creates a player with nothing selected and not playing. O(1).
      *
      * @param playlist the playlist to play
+     * @throws IllegalArgumentException if playlist is null
      */
     public MusicPlayer(Playlist playlist)
     {
+        if (playlist == null)
+        {
+            throw new IllegalArgumentException("Playlist cannot be null.");
+        }
+
         this.playlist = playlist;
         this.currentIndex = -1;
         this.playing = false;
@@ -35,6 +41,8 @@ public class MusicPlayer
      */
     public boolean play()
     {
+        syncWithPlaylist();
+
         if (playlist.size() == 0)
         {
             return false;
@@ -65,6 +73,8 @@ public class MusicPlayer
      */
     public boolean nextTrack()
     {
+        syncWithPlaylist();
+
         if (currentIndex >= 0
             && currentIndex < playlist.size() - 1)
         {
@@ -83,6 +93,8 @@ public class MusicPlayer
      */
     public boolean previousTrack()
     {
+        syncWithPlaylist();
+
         if (currentIndex > 0)
         {
             currentIndex--;
@@ -99,11 +111,45 @@ public class MusicPlayer
      */
     public Song getCurrentSong()
     {
+        syncWithPlaylist();
+
         if (currentIndex == -1)
         {
             return null;
         }
-        
+
         return playlist.getSong(currentIndex);
+    }
+
+    /**
+     * Tells whether the player is playing. O(1).
+     *
+     * @return true after a successful play() until pause(), or false
+     */
+    public boolean isPlaying()
+    {
+        syncWithPlaylist();
+        return playing;
+    }
+
+    /**
+     * Restores the invariant after the playlist changed under the player
+     * (songs removed through Playlist). If the playlist is now empty,
+     * nothing is selected and playback stops; if currentIndex is past the
+     * end, it moves to the last song. O(1).
+     */
+    private void syncWithPlaylist()
+    {
+        int size = playlist.size();
+
+        if (size == 0)
+        {
+            currentIndex = -1;
+            playing = false;
+        }
+        else if (currentIndex >= size)
+        {
+            currentIndex = size - 1;
+        }
     }
 }
